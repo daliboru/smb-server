@@ -48,6 +48,7 @@ module.exports = {
         position,
         mailto,
         startup: startup.id,
+        email: startup.email,
         company: startup.company,
         imageUrl: startup.imageUrl,
         industry: startup.industry,

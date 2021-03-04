@@ -10,6 +10,7 @@ const postSchema = new Schema({
   industry: String,
   location: String,
   growthStage: String,
+  email: String,
   fundingStage: String,
   createdAt: String,
   startup: {
