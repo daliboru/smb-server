@@ -8,6 +8,7 @@ module.exports = gql`
     mailto: String!
     company: String!
     createdAt: String!
+    email: String!
     imageUrl: String!
     industry: String!
     location: String!
