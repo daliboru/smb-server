@@ -7,9 +7,9 @@ const postSchema = new Schema({
   company: String,
   mailto: String,
   createdAt: String,
-  user: {
+  startup: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'startups',
   },
 });
 

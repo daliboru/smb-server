@@ -7,31 +7,48 @@ module.exports = gql`
     position: String!
     company: String!
     createdAt: String!
-    username: String!
+
     mailto: String!
   }
-  type User {
+  type Startup {
     id: ID!
     email: String!
     token: String!
     company: String!
-    username: String!
+    imageUrl: String!
+    industry: String!
+    location: String!
+    growthStage: String!
+    fundingStage: String!
     createdAt: String!
   }
-  input registerInput {
-    username: String!
+  input startupRegisterInput {
     email: String!
     company: String!
     password: String!
     confirmPassword: String!
+    imageUrl: String!
+    industry: String!
+    location: String!
+    growthStage: String!
+    fundingStage: String!
+  }
+  input filterInput {
+    company: String
+    industry: String
+    location: String
+    growthStage: String
+    fundingStage: String
   }
   type Query {
     getPosts: [Post]
     getPost(postId: ID!): Post
+    getStartups(filter: filterInput): [Startup]
+    getStartup(startupId: ID!): Startup
   }
   type Mutation {
-    register(registerInput: registerInput): User!
-    login(username: String!, password: String!): User!
+    startupRegister(startupRegisterInput: startupRegisterInput): Startup!
+    startupLogin(email: String!, password: String!): Startup!
     createPost(body: String!, position: String!, mailto: String!): Post!
     deletePost(postId: ID!): String!
   }
