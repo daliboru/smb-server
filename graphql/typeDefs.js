@@ -5,10 +5,14 @@ module.exports = gql`
     id: ID!
     body: String!
     position: String!
+    mailto: String!
     company: String!
     createdAt: String!
-
-    mailto: String!
+    imageUrl: String!
+    industry: String!
+    location: String!
+    growthStage: String!
+    fundingStage: String!
   }
   type Startup {
     id: ID!

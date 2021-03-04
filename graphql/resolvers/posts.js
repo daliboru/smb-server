@@ -27,8 +27,7 @@ module.exports = {
   },
   Mutation: {
     async createPost(_, { body, position, mailto }, context) {
-      const user = checkAuth(context);
-
+      const startup = checkAuth(context);
       if (position.trim() === '') {
         throw new Error('Position must not be empty');
       }
@@ -48,9 +47,13 @@ module.exports = {
         body,
         position,
         mailto,
-        company: user.company,
-        user: user.id,
-        username: user.username,
+        startup: startup.id,
+        company: startup.company,
+        imageUrl: startup.imageUrl,
+        industry: startup.industry,
+        location: startup.location,
+        growthStage: startup.growthStage,
+        fundingStage: startup.fundingStage,
         createdAt: new Date().toISOString(),
       });
 
@@ -59,11 +62,11 @@ module.exports = {
       return post;
     },
     async deletePost(_, { postId }, context) {
-      const user = checkAuth(context);
+      const startup = checkAuth(context);
 
       try {
         const post = await Post.findById(postId);
-        if (user.username === post.username) {
+        if (startup.email === post.email) {
           await post.delete();
           return 'Post deleted successfully';
         } else {
