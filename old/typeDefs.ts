@@ -1,4 +1,4 @@
-const gql = require('graphql-tag');
+const gql = require("graphql-tag");
 
 module.exports = gql`
   type Post {
@@ -6,14 +6,9 @@ module.exports = gql`
     body: String!
     position: String!
     mailto: String!
-    company: String!
     createdAt: String!
-    email: String!
     imageUrl: String!
-    industry: String!
     location: String!
-    growthStage: String!
-    fundingStage: String!
   }
   type Startup {
     id: ID!
