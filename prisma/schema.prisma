@@ -12,21 +12,26 @@ model Startup {
   email        String   @unique
   name         String
   imageUr      String?
-  createdAt    DateTime @default(now())
   industry     String
   growthStage  String?
   fundingStage String?
-  Post         Post[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  posts        Post[]
 }
 
 model Post {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
   body      String
   mailto    String
   imageUrl  String
   location  String
-  createdAt String
-  startup   Startup @relation(fields: [startupId], references: [id])
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  startup   Startup  @relation(fields: [startupId], references: [id])
 
   startupId String @db.ObjectId
 }

@@ -5,8 +5,23 @@
 
 
 import type { Context } from "./src/context"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+  }
+}
 
 
 declare global {
@@ -25,29 +40,33 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
 }
 
 export interface NexusGenObjects {
   Post: { // root type
-    body?: string | null; // ID
-    createdAt?: string | null; // ID
-    id?: string | null; // ID
-    imageUrl?: string | null; // ID
-    location?: string | null; // ID
-    mailto?: string | null; // ID
-    position?: string | null; // ID
+    body: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    imageUrl?: string | null; // String
+    location?: string | null; // String
+    mailto: string; // String!
+    published: boolean; // Boolean!
+    title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    viewCount: number; // Int!
   }
   Query: {};
   Startup: { // root type
-    createdAt?: string | null; // String
-    email?: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
     fundingStage?: string | null; // String
     growthStage?: string | null; // String
-    id?: string | null; // ID
+    id: string; // ID!
     imageUrl?: string | null; // String
     industry?: string | null; // String
-    location?: string | null; // String
-    name?: string | null; // String
+    name: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
 
@@ -63,64 +82,69 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Post: { // field return type
-    body: string | null; // ID
-    createdAt: string | null; // ID
-    id: string | null; // ID
-    imageUrl: string | null; // ID
-    location: string | null; // ID
-    mailto: string | null; // ID
-    position: string | null; // ID
+    body: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    imageUrl: string | null; // String
+    location: string | null; // String
+    mailto: string; // String!
+    published: boolean; // Boolean!
+    startup: NexusGenRootTypes['Startup'] | null; // Startup
+    title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    viewCount: number; // Int!
   }
   Query: { // field return type
-    allPosts: NexusGenRootTypes['Post'] | null; // Post
-    findStartupById: NexusGenRootTypes['Startup'] | null; // Startup
+    allPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    allStartups: NexusGenRootTypes['Startup'][]; // [Startup!]!
   }
   Startup: { // field return type
-    createdAt: string | null; // String
-    email: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
     fundingStage: string | null; // String
     growthStage: string | null; // String
-    id: string | null; // ID
+    id: string; // ID!
     imageUrl: string | null; // String
     industry: string | null; // String
-    location: string | null; // String
-    name: string | null; // String
+    name: string; // String!
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Post: { // field return type name
-    body: 'ID'
-    createdAt: 'ID'
+    body: 'String'
+    createdAt: 'DateTime'
     id: 'ID'
-    imageUrl: 'ID'
-    location: 'ID'
-    mailto: 'ID'
-    position: 'ID'
+    imageUrl: 'String'
+    location: 'String'
+    mailto: 'String'
+    published: 'Boolean'
+    startup: 'Startup'
+    title: 'String'
+    updatedAt: 'DateTime'
+    viewCount: 'Int'
   }
   Query: { // field return type name
     allPosts: 'Post'
-    findStartupById: 'Startup'
+    allStartups: 'Startup'
   }
   Startup: { // field return type name
-    createdAt: 'String'
+    createdAt: 'DateTime'
     email: 'String'
     fundingStage: 'String'
     growthStage: 'String'
     id: 'ID'
     imageUrl: 'String'
     industry: 'String'
-    location: 'String'
     name: 'String'
+    posts: 'Post'
+    updatedAt: 'DateTime'
   }
 }
 
 export interface NexusGenArgTypes {
-  Query: {
-    findStartupById: { // args
-      id?: string | null; // String
-    }
-  }
 }
 
 export interface NexusGenAbstractTypeMembers {

@@ -1,41 +1,40 @@
-import { extendType, objectType, stringArg } from "nexus";
+import { asNexusMethod, extendType, objectType } from "nexus";
+import { DateTimeResolver } from "graphql-scalars";
+import { Context } from "../context";
 
-type Startup = {
-  id: string;
-  email: string;
-  name: string;
-  imageUrl?: string;
-  industry: string;
-  growthStage?: string;
-  fundingStage?: string;
-  createdAt: string;
-};
+export const DateTime = asNexusMethod(DateTimeResolver, "date");
 
 export const Startup = objectType({
   name: "Startup",
   definition(t) {
-    t.id("id");
-    t.string("email");
-    t.string("name");
+    t.nonNull.id("id");
+    t.nonNull.string("email");
+    t.nonNull.string("name");
     t.string("imageUrl");
     t.string("industry");
-    t.string("location");
     t.string("growthStage");
     t.string("fundingStage");
-    t.string("createdAt");
+    t.nonNull.field("createdAt", { type: "DateTime" });
+    t.nonNull.field("updatedAt", { type: "DateTime" });
+    t.nonNull.list.nonNull.field("posts", {
+      type: "Post",
+      resolve: (parent, _, ctx: Context) => {
+        return ctx.db.startup
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .posts();
+      },
+    });
   },
 });
 
 export const StartupQuery = extendType({
   type: "Query",
   definition: (t) => {
-    t.field("findStartupById", {
+    t.nonNull.list.nonNull.field("allStartups", {
       type: "Startup",
-      args: { id: stringArg() },
-      resolve: (_root, args, ctx) => {
-        const id = args.id as string;
-        return ctx.db.startup.findFirst({ where: { id } });
-      },
+      resolve: (_root, _args, ctx: Context) => ctx.db.startup.findMany(),
     });
   },
 });

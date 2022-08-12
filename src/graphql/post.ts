@@ -1,32 +1,36 @@
 import { extendType, objectType } from "nexus";
-
-type Post = {
-  id: string;
-  body: string;
-  position: string;
-  mailto: string;
-  createdAt: string;
-  imageUrl: string;
-  location: string;
-};
+import { Context } from "../context";
 
 export const Post = objectType({
   name: "Post",
   definition(t) {
-    t.id("id");
-    t.id("body");
-    t.id("position");
-    t.id("mailto");
-    t.id("createdAt");
-    t.id("imageUrl");
-    t.id("location");
+    t.nonNull.id("id");
+    t.nonNull.string("body");
+    t.nonNull.string("title");
+    t.nonNull.string("mailto");
+    t.string("imageUrl");
+    t.nonNull.field("createdAt", { type: "DateTime" });
+    t.nonNull.field("updatedAt", { type: "DateTime" });
+    t.string("location");
+    t.nonNull.boolean("published");
+    t.nonNull.int("viewCount");
+    t.field("startup", {
+      type: "Startup",
+      resolve: (parent, _, ctx: Context) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id || undefined },
+          })
+          .startup();
+      },
+    });
   },
 });
 
 export const PostQuery = extendType({
   type: "Query",
   definition: (t) => {
-    t.field("allPosts", {
+    t.nonNull.list.nonNull.field("allPosts", {
       type: "Post",
       resolve: (_root, _args, ctx) => ctx.db.post.findMany(),
     });
