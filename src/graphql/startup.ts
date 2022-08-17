@@ -8,7 +8,7 @@ import {
 import { DateTimeResolver } from "graphql-scalars";
 import { Context } from "../context";
 import { sign } from "jsonwebtoken";
-import { hash } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 import { SECRET } from "../utils/auth";
 
 export const DateTime = asNexusMethod(DateTimeResolver, "date");
@@ -71,21 +71,47 @@ export const StartupMutation = extendType({
         fundingStage: stringArg(),
       },
       resolve: async (_root, args, ctx: Context) => {
-        const hashedPassword = await hash(args.password, 10);
-        console.log(ctx.db);
+        try {
+          const hashedPassword = await hash(args.password, 10);
 
-        const startup = await ctx.db.startup.create({
-          data: {
-            email: args.email,
-            password: hashedPassword,
-            industry: args.industry,
-            name: args.name,
-            fundingStage: args.fundingStage,
-            growthStage: args.growthStage,
-            imageUr: args.imageUrl,
-          },
+          const startup = await ctx.db.startup.create({
+            data: {
+              email: args.email.trim().toLocaleLowerCase(),
+              password: hashedPassword,
+              industry: args.industry,
+              name: args.name.trim(),
+              fundingStage: args.fundingStage,
+              growthStage: args.growthStage,
+              imageUr: args.imageUrl?.trim(),
+            },
+          });
+
+          return {
+            token: sign({ id: startup.id }, SECRET),
+            startup,
+          };
+        } catch (e) {
+          console.error(e);
+          throw new Error("Error signing up");
+        }
+      },
+    });
+    t.field("login", {
+      type: "AuthPayload",
+      args: {
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+      },
+      resolve: async (_root, { email, password }, ctx: Context) => {
+        const startup = await ctx.db.startup.findUnique({
+          where: { email },
         });
-        console.log(startup);
+
+        if (!startup) throw new Error(`No user found for email: ${email}`);
+
+        const passwordValid = await compare(password, startup.password);
+
+        if (!passwordValid) throw new Error("Invalid password");
 
         return {
           token: sign({ id: startup.id }, SECRET),
@@ -93,21 +119,5 @@ export const StartupMutation = extendType({
         };
       },
     });
-
-    // t.field("login", {
-    //   type: "AuthPayload",
-    //   args: {
-    //     email: nonNull(stringArg()),
-    //     password: nonNull(stringArg()),
-    //   },
-    //   resolve: async (_root, { email, password }, ctx: Context) => {
-    //     const startup = await ctx.db.startup.findUnique({
-    //       where: { email },
-    //     });
-    //     if (!startup) {
-    //       throw new Error(`No user found for email: ${email}`);
-    //     }
-    //   },
-    // });
   },
 });
