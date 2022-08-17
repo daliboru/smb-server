@@ -10,6 +10,7 @@ datasource db {
 model Startup {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
+  password     String
   name         String
   imageUr      String?
   industry     String

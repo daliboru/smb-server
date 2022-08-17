@@ -1,6 +1,15 @@
-import { asNexusMethod, extendType, objectType } from "nexus";
+import {
+  asNexusMethod,
+  extendType,
+  nonNull,
+  objectType,
+  stringArg,
+} from "nexus";
 import { DateTimeResolver } from "graphql-scalars";
 import { Context } from "../context";
+import { sign } from "jsonwebtoken";
+import { hash } from "bcryptjs";
+import { SECRET } from "../utils/auth";
 
 export const DateTime = asNexusMethod(DateTimeResolver, "date");
 
@@ -29,12 +38,76 @@ export const Startup = objectType({
   },
 });
 
+export const AuthPayload = objectType({
+  name: "AuthPayload",
+  definition(t) {
+    t.string("token");
+    t.field("startup", { type: "Startup" });
+  },
+});
+
 export const StartupQuery = extendType({
   type: "Query",
-  definition: (t) => {
+  definition(t) {
     t.nonNull.list.nonNull.field("allStartups", {
       type: "Startup",
       resolve: (_root, _args, ctx: Context) => ctx.db.startup.findMany(),
     });
+  },
+});
+
+export const StartupMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("signup", {
+      type: "AuthPayload",
+      args: {
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        name: nonNull(stringArg()),
+        imageUrl: stringArg(),
+        industry: nonNull(stringArg()),
+        growthStage: stringArg(),
+        fundingStage: stringArg(),
+      },
+      resolve: async (_root, args, ctx: Context) => {
+        const hashedPassword = await hash(args.password, 10);
+        console.log(ctx.db);
+
+        const startup = await ctx.db.startup.create({
+          data: {
+            email: args.email,
+            password: hashedPassword,
+            industry: args.industry,
+            name: args.name,
+            fundingStage: args.fundingStage,
+            growthStage: args.growthStage,
+            imageUr: args.imageUrl,
+          },
+        });
+        console.log(startup);
+
+        return {
+          token: sign({ id: startup.id }, SECRET),
+          startup,
+        };
+      },
+    });
+
+    // t.field("login", {
+    //   type: "AuthPayload",
+    //   args: {
+    //     email: nonNull(stringArg()),
+    //     password: nonNull(stringArg()),
+    //   },
+    //   resolve: async (_root, { email, password }, ctx: Context) => {
+    //     const startup = await ctx.db.startup.findUnique({
+    //       where: { email },
+    //     });
+    //     if (!startup) {
+    //       throw new Error(`No user found for email: ${email}`);
+    //     }
+    //   },
+    // });
   },
 });

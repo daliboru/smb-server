@@ -44,6 +44,11 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AuthPayload: { // root type
+    startup?: NexusGenRootTypes['Startup'] | null; // Startup
+    token?: string | null; // String
+  }
+  Mutation: {};
   Post: { // root type
     body: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -81,6 +86,13 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  AuthPayload: { // field return type
+    startup: NexusGenRootTypes['Startup'] | null; // Startup
+    token: string | null; // String
+  }
+  Mutation: { // field return type
+    signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+  }
   Post: { // field return type
     body: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -113,6 +125,13 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AuthPayload: { // field return type name
+    startup: 'Startup'
+    token: 'String'
+  }
+  Mutation: { // field return type name
+    signup: 'AuthPayload'
+  }
   Post: { // field return type name
     body: 'String'
     createdAt: 'DateTime'
@@ -145,6 +164,17 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    signup: { // args
+      email: string; // String!
+      fundingStage?: string | null; // String
+      growthStage?: string | null; // String
+      imageUrl?: string | null; // String
+      industry: string; // String!
+      name: string; // String!
+      password: string; // String!
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {

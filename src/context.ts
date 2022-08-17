@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
-export interface Context {
-  db: PrismaClient;
-}
-
 const db = new PrismaClient();
 
-export const context: Context = {
-  db,
-};
+export interface Context {
+  db: PrismaClient;
+  req: any; // HTTP request carrying the `Authorization` header
+}
+
+export function createContext(req: any) {
+  return {
+    ...req,
+    db,
+  };
+}
