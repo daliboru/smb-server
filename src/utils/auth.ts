@@ -10,8 +10,16 @@ interface Token {
 export function getStartupId(ctx: Context) {
   const authHeader = ctx.req.get("Authorization");
   if (authHeader) {
-    const token = authHeader.replace("Bearer ", "");
-    const verifiedToken = verify(token, SECRET) as Token;
-    return verifiedToken && String(verifiedToken.startupId);
+    inspectToken(authHeader);
+  }
+
+  function inspectToken(authHeader: string) {
+    try {
+      const token = authHeader.replace("Bearer ", "");
+      const verifiedToken = verify(token, SECRET) as Token;
+      return verifiedToken && Number(verifiedToken.startupId);
+    } catch (e) {
+      throw new Error("Session invalid");
+    }
   }
 }
