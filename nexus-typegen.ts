@@ -106,6 +106,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createPost: NexusGenRootTypes['Post'] | null; // Post
     login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+    removePost: NexusGenRootTypes['Post'] | null; // Post
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     updatePost: NexusGenRootTypes['Post'] | null; // Post
   }
@@ -146,6 +147,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createPost: 'Post'
     login: 'AuthPayload'
+    removePost: 'Post'
     signup: 'AuthPayload'
     updatePost: 'Post'
   }
@@ -186,6 +188,9 @@ export interface NexusGenArgTypes {
     login: { // args
       email: string; // String!
       password: string; // String!
+    }
+    removePost: { // args
+      id: string; // String!
     }
     signup: { // args
       email: string; // String!

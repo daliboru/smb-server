@@ -1,4 +1,11 @@
-import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
+import {
+  arg,
+  extendType,
+  inputObjectType,
+  nonNull,
+  objectType,
+  stringArg,
+} from "nexus";
 import { Context } from "../context";
 import { getStartupId } from "../utils/auth";
 
@@ -31,7 +38,7 @@ export const PostQuery = extendType({
   definition: (t) => {
     t.nonNull.list.nonNull.field("allPosts", {
       type: "Post",
-      resolve: (_root, _args, ctx) => ctx.db.post.findMany(),
+      resolve: (_, _args, ctx) => ctx.db.post.findMany(),
     });
   },
 });
@@ -48,7 +55,7 @@ export const PostMutation = extendType({
           })
         ),
       },
-      resolve: async (_root, args, ctx: Context) => {
+      resolve: async (_, args, ctx: Context) => {
         const startupId = getStartupId(ctx);
         if (startupId) {
           return ctx.db.post.create({
@@ -74,7 +81,7 @@ export const PostMutation = extendType({
           })
         ),
       },
-      resolve: async (_root, args, ctx: Context) => {
+      resolve: async (_, args, ctx: Context) => {
         try {
           return await ctx.db.post.update({
             where: { id: args.data.id },
@@ -89,6 +96,17 @@ export const PostMutation = extendType({
         } catch (e) {
           throw new Error(`Error on post update with id: ${args.data.id}`);
         }
+      },
+    });
+    t.field("removePost", {
+      type: "Post",
+      args: {
+        id: nonNull(stringArg()),
+      },
+      resolve: (_, { id }, ctx: Context) => {
+        return ctx.db.post.delete({
+          where: { id },
+        });
       },
     });
   },

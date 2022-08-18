@@ -15,6 +15,7 @@ scalar DateTime
 type Mutation {
   createPost(data: PostCreateInput!): Post
   login(email: String!, password: String!): AuthPayload
+  removePost(id: String!): Post
   signup(email: String!, fundingStage: String, growthStage: String, imageUrl: String, industry: String!, name: String!, password: String!): AuthPayload
   updatePost(data: PostUpdateInput!): Post
 }
