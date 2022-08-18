@@ -16,6 +16,7 @@ type Mutation {
   createPost(data: PostCreateInput!): Post
   login(email: String!, password: String!): AuthPayload
   signup(email: String!, fundingStage: String, growthStage: String, imageUrl: String, industry: String!, name: String!, password: String!): AuthPayload
+  updatePost(data: PostUpdateInput!): Post
 }
 
 type Post {
@@ -32,6 +33,15 @@ type Post {
 
 input PostCreateInput {
   body: String!
+  location: String!
+  mailto: String!
+  published: Boolean!
+  title: String!
+}
+
+input PostUpdateInput {
+  body: String!
+  id: String!
   location: String!
   mailto: String!
   published: Boolean!

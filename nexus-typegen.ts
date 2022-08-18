@@ -36,6 +36,14 @@ export interface NexusGenInputs {
     published: boolean; // Boolean!
     title: string; // String!
   }
+  PostUpdateInput: { // input type
+    body: string; // String!
+    id: string; // String!
+    location: string; // String!
+    mailto: string; // String!
+    published: boolean; // Boolean!
+    title: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -99,6 +107,7 @@ export interface NexusGenFieldTypes {
     createPost: NexusGenRootTypes['Post'] | null; // Post
     login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+    updatePost: NexusGenRootTypes['Post'] | null; // Post
   }
   Post: { // field return type
     body: string; // String!
@@ -138,6 +147,7 @@ export interface NexusGenFieldTypeNames {
     createPost: 'Post'
     login: 'AuthPayload'
     signup: 'AuthPayload'
+    updatePost: 'Post'
   }
   Post: { // field return type name
     body: 'String'
@@ -185,6 +195,9 @@ export interface NexusGenArgTypes {
       industry: string; // String!
       name: string; // String!
       password: string; // String!
+    }
+    updatePost: { // args
+      data: NexusGenInputs['PostUpdateInput']; // PostUpdateInput!
     }
   }
 }

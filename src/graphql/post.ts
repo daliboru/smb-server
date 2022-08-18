@@ -65,12 +65,50 @@ export const PostMutation = extendType({
         throw new Error("Error creating a post");
       },
     });
+    t.field("updatePost", {
+      type: "Post",
+      args: {
+        data: nonNull(
+          arg({
+            type: "PostUpdateInput",
+          })
+        ),
+      },
+      resolve: async (_root, args, ctx: Context) => {
+        try {
+          return await ctx.db.post.update({
+            where: { id: args.data.id },
+            data: {
+              title: args.data.title.trim(),
+              body: args.data.body,
+              mailto: args.data.mailto.trim(),
+              location: args.data.location.trim(),
+              published: args.data.published,
+            },
+          });
+        } catch (e) {
+          throw new Error(`Error on post update with id: ${args.data.id}`);
+        }
+      },
+    });
   },
 });
 
 export const PostCreateInput = inputObjectType({
   name: "PostCreateInput",
   definition(t) {
+    t.nonNull.string("title");
+    t.nonNull.string("body");
+    t.nonNull.string("mailto");
+    t.nonNull.string("location");
+    t.nonNull.boolean("published");
+  },
+});
+
+export const PostUpdateInput = inputObjectType({
+  name: "PostUpdateInput",
+  definition(t) {
+    t.nonNull.string("id");
     t.nonNull.string("title");
     t.nonNull.string("body");
     t.nonNull.string("mailto");
