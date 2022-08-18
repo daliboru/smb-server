@@ -29,6 +29,13 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  PostCreateInput: { // input type
+    body: string; // String!
+    location: string; // String!
+    mailto: string; // String!
+    published: boolean; // Boolean!
+    title: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -53,13 +60,11 @@ export interface NexusGenObjects {
     body: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    imageUrl?: string | null; // String
-    location?: string | null; // String
+    location: string; // String!
     mailto: string; // String!
     published: boolean; // Boolean!
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    viewCount: number; // Int!
   }
   Query: {};
   Startup: { // root type
@@ -91,6 +96,7 @@ export interface NexusGenFieldTypes {
     token: string | null; // String
   }
   Mutation: { // field return type
+    createPost: NexusGenRootTypes['Post'] | null; // Post
     login: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signup: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
@@ -98,14 +104,12 @@ export interface NexusGenFieldTypes {
     body: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    imageUrl: string | null; // String
-    location: string | null; // String
+    location: string; // String!
     mailto: string; // String!
     published: boolean; // Boolean!
     startup: NexusGenRootTypes['Startup'] | null; // Startup
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    viewCount: number; // Int!
   }
   Query: { // field return type
     allPosts: NexusGenRootTypes['Post'][]; // [Post!]!
@@ -131,6 +135,7 @@ export interface NexusGenFieldTypeNames {
     token: 'String'
   }
   Mutation: { // field return type name
+    createPost: 'Post'
     login: 'AuthPayload'
     signup: 'AuthPayload'
   }
@@ -138,14 +143,12 @@ export interface NexusGenFieldTypeNames {
     body: 'String'
     createdAt: 'DateTime'
     id: 'ID'
-    imageUrl: 'String'
     location: 'String'
     mailto: 'String'
     published: 'Boolean'
     startup: 'Startup'
     title: 'String'
     updatedAt: 'DateTime'
-    viewCount: 'Int'
   }
   Query: { // field return type name
     allPosts: 'Post'
@@ -167,6 +170,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createPost: { // args
+      data: NexusGenInputs['PostCreateInput']; // PostCreateInput!
+    }
     login: { // args
       email: string; // String!
       password: string; // String!
@@ -191,7 +197,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 

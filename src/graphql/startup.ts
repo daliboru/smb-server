@@ -87,7 +87,7 @@ export const StartupMutation = extendType({
           });
 
           return {
-            token: sign({ id: startup.id }, SECRET),
+            token: sign({ startupId: startup.id }, SECRET),
             startup,
           };
         } catch (e) {
@@ -114,7 +114,7 @@ export const StartupMutation = extendType({
         if (!passwordValid) throw new Error("Invalid password");
 
         return {
-          token: sign({ id: startup.id }, SECRET),
+          token: sign({ startupId: startup.id }, SECRET),
           startup,
         };
       },

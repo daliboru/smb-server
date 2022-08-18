@@ -13,6 +13,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
+  createPost(data: PostCreateInput!): Post
   login(email: String!, password: String!): AuthPayload
   signup(email: String!, fundingStage: String, growthStage: String, imageUrl: String, industry: String!, name: String!, password: String!): AuthPayload
 }
@@ -21,14 +22,20 @@ type Post {
   body: String!
   createdAt: DateTime!
   id: ID!
-  imageUrl: String
-  location: String
+  location: String!
   mailto: String!
   published: Boolean!
   startup: Startup
   title: String!
   updatedAt: DateTime!
-  viewCount: Int!
+}
+
+input PostCreateInput {
+  body: String!
+  location: String!
+  mailto: String!
+  published: Boolean!
+  title: String!
 }
 
 type Query {
