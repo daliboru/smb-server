@@ -6,7 +6,11 @@ import { schema } from "./schema";
 
 const port = process.env.PORT || 5000;
 
-const server = new ApolloServer({ schema, context: createContext });
+const server = new ApolloServer({
+  schema,
+  context: createContext,
+  cache: "bounded",
+});
 
 server.listen({ port }).then(({ url }: { url: string }) => {
   console.log(`🚀  Server ready at ${url}`);
