@@ -10,6 +10,7 @@ const server = new ApolloServer({
   schema,
   context: createContext,
   cache: "bounded",
+  csrfPrevention: true,
 });
 
 server.listen({ port }).then(({ url }: { url: string }) => {

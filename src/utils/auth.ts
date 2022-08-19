@@ -20,3 +20,11 @@ export function getStartupId(ctx: Context) {
     }
   }
 }
+
+export function checkIfUserAuthorized(ctx: Context) {
+  const startupId = getStartupId(ctx);
+  if (!startupId) {
+    throw new Error("You're not authorized for that action");
+  }
+  return startupId;
+}

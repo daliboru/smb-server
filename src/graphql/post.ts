@@ -7,7 +7,7 @@ import {
   stringArg,
 } from "nexus";
 import { Context } from "../context";
-import { getStartupId } from "../utils/auth";
+import { checkIfUserAuthorized, getStartupId } from "../utils/auth";
 
 export const Post = objectType({
   name: "Post",
@@ -56,20 +56,17 @@ export const PostMutation = extendType({
         ),
       },
       resolve: async (_, args, ctx: Context) => {
-        const startupId = getStartupId(ctx);
-        if (startupId) {
-          return ctx.db.post.create({
-            data: {
-              title: args.data.title.trim(),
-              body: args.data.body,
-              mailto: args.data.mailto.trim(),
-              location: args.data.location.trim(),
-              published: args.data.published,
-              startupId: startupId,
-            },
-          });
-        }
-        throw new Error("Error creating a post");
+        const startupId = checkIfUserAuthorized(ctx);
+        return ctx.db.post.create({
+          data: {
+            title: args.data.title.trim(),
+            body: args.data.body,
+            mailto: args.data.mailto.trim(),
+            location: args.data.location.trim(),
+            published: args.data.published,
+            startupId: startupId,
+          },
+        });
       },
     });
     t.field("updatePost", {
@@ -82,20 +79,17 @@ export const PostMutation = extendType({
         ),
       },
       resolve: async (_, args, ctx: Context) => {
-        try {
-          return await ctx.db.post.update({
-            where: { id: args.data.id },
-            data: {
-              title: args.data.title.trim(),
-              body: args.data.body,
-              mailto: args.data.mailto.trim(),
-              location: args.data.location.trim(),
-              published: args.data.published,
-            },
-          });
-        } catch (e) {
-          throw new Error(`Error on post update with id: ${args.data.id}`);
-        }
+        checkIfUserAuthorized(ctx);
+        return await ctx.db.post.update({
+          where: { id: args.data.id },
+          data: {
+            title: args.data.title.trim(),
+            body: args.data.body,
+            mailto: args.data.mailto.trim(),
+            location: args.data.location.trim(),
+            published: args.data.published,
+          },
+        });
       },
     });
     t.field("removePost", {
@@ -104,6 +98,7 @@ export const PostMutation = extendType({
         id: nonNull(stringArg()),
       },
       resolve: (_, { id }, ctx: Context) => {
+        checkIfUserAuthorized(ctx);
         return ctx.db.post.delete({
           where: { id },
         });
